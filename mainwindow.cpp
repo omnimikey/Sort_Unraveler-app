@@ -193,6 +193,43 @@ void MainWindow::Quick_Sort(int *elements, int low, int high){
     }
 }
 
+void MainWindow::HeapIt(int *elements, int n, int i){
+    int largest = i; // largest key in tree
+    int l = 2 * i + 1; // left = 2*i + 1
+    int r = 2 * i + 2; // right = 2*i + 2
+
+    // If left child is larger than root
+    if (l < n && elements[l] > elements[largest])
+        largest = l;
+
+    // If right child is larger than largest so far
+    if (r < n && elements[r] > elements[largest])
+        largest = r;
+
+    // If largest is not root
+    if (largest != i) {
+        swap(elements[i], elements[largest]);
+        Update_UI(i,largest);
+        // Recursively heapify the affected sub-tree
+        HeapIt(elements, n, largest);
+    }};
+
+void MainWindow::HeapSort(int *elements, int n){
+    // Build heap (rearrange array)
+    for (int i = n / 2 - 1; i >= 0; i--)
+        HeapIt(elements, n, i);
+
+    // One by one extract an element from heap
+    for (int i = n - 1; i >= 0; i--) {
+        // Move current root to end
+        swap(elements[0], elements[i]);
+        Update_UI(0,i);
+
+        // call max heapify on the reduced heap
+        HeapIt(elements, i, 0);
+    }
+};
+
 
 int MainWindow::Partition(int *elements, int low, int high, int pivot){
     int i =low;
@@ -365,6 +402,8 @@ void MainWindow::Update_Merge_Elements(int k, vector<int> merger)
         loop.exec();  // Wait until animation finishes
     }
 
+
+
     // Reset styles after all animations are complete
     QTimer::singleShot(500, [this]() {
         for (auto lbl : Lbl_Elements) {
@@ -387,6 +426,7 @@ void MainWindow::Show_Height_Values()
 
 void MainWindow::on_pushButton_clicked()         // Bubble Sort Button
 {
+    check_k=0;
     Bubble_Sort(Data_Elements, Total_Number_Of_Elements);
 }
 
@@ -394,6 +434,7 @@ void MainWindow::on_pushButton_clicked()         // Bubble Sort Button
 void MainWindow::on_pushButton_2_clicked()  //Selection Sort Button
 {
 
+    check_k=0;
     Selection_Sort(Data_Elements, Total_Number_Of_Elements);
     Show_Height_Values();
 }
@@ -401,6 +442,7 @@ void MainWindow::on_pushButton_2_clicked()  //Selection Sort Button
 
 void MainWindow::on_pushButton_3_clicked()   //Insertion Sort Button
 {
+    check_k=0;
     Insertion_Sort(Data_Elements, Total_Number_Of_Elements);
 }
 
@@ -415,6 +457,7 @@ void MainWindow::on_pushButton_4_clicked() //Merge Sort Button
 void MainWindow::on_pushButton_5_clicked() //Reset Button
 {
 
+    check_k=0;
     // Step 1: Safely delete all QLabel elements in Lbl_Elements
     for (QLabel* lbl : Lbl_Elements) {
         lbl->deleteLater();  // This schedules each QLabel for deletion after the event loop
@@ -486,5 +529,11 @@ void MainWindow::Initialize_UI()
     }
 
     update();  // Repaint the window after adding new elements
+}
+
+
+void MainWindow::on_pushButton_7_clicked() //Heap Sort
+{
+    HeapSort(Data_Elements,Total_Number_Of_Elements);
 }
 

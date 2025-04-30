@@ -36,6 +36,8 @@ private slots:
 
     void on_verticalSlider_valueChanged(int value);
 
+    void on_pushButton_7_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -78,6 +80,10 @@ private:
     void Total_Elements_Setter(int num);
 
     void Initialize_UI();
+
+    void HeapIt(int *elements, int n, int i);
+
+    void HeapSort(int *elements, int n);
 
     QList<QLabel*> Lbl_Elements;
 
